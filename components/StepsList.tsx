@@ -7,6 +7,7 @@ type Props = {
   moves: Move[];
   autoSpeed: number;
   activeIndex: number;
+  isFetching: boolean
 }
 
 export function StepsList({
@@ -14,7 +15,16 @@ export function StepsList({
   moves,
   autoSpeed,
   activeIndex,
+  isFetching,
 }: Props) {
+
+  if (isFetching) {
+    return (
+      <div className='flex-1 h-[60vh] flex flex-col items-center justify-center gap-2 p-5 border border-black/30 rounded-xl overflow-scroll'>
+        <div className='text-lg text-center'>Fetching solution...</div>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex-1 h-[60vh] flex flex-col items-center gap-2 p-5 border border-black/30 rounded-xl overflow-scroll ${solution?.mode !== 'SOLUTION' ? 'justify-center' : ''}`}>

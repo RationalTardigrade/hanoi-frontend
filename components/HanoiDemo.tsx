@@ -41,6 +41,7 @@ export function HanoiDemo() {
   const [selectedRod, setSelectedRod] = useState<Rod | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [autoSpeed, setAutoSpeed] = useState(300);
   const timerRef = useRef<number | null>(null);
   const runIdRef = useRef(0);
@@ -60,9 +61,11 @@ export function HanoiDemo() {
   );
 
   async function fetchSolution() {
+    setIsFetching(true);
     resetBoard(disks);
     const res = await solveHanoi(disks);
     setSolution(res);
+    setIsFetching(false);
   }
 
   async function startAuto() {
@@ -78,6 +81,7 @@ export function HanoiDemo() {
 
     let res: SolveResponse;
     try {
+      setIsFetching(true);
       if (solution && solution.mode === 'SOLUTION' && solution.disks === disks) {
         res = solution;
       } else {
@@ -88,6 +92,8 @@ export function HanoiDemo() {
     } catch {
       if (runIdRef.current === runId) stopAuto();
       return;
+    } finally {
+      setIsFetching(false);
     }
 
     if (res.mode !== 'SOLUTION') {
@@ -221,7 +227,7 @@ export function HanoiDemo() {
       </div>
 
       <div className='w-full flex gap-10'>
-        <StepsList solution={solution} moves={moves} autoSpeed={autoSpeed} activeIndex={stepIndex} />
+        <StepsList solution={solution} moves={moves} autoSpeed={autoSpeed} activeIndex={stepIndex} isFetching={isFetching} />
         <HanoiBoard disks={disks} rods={rods} selectedRod={selectedRod} onRodClick={onRodClick} />
       </div>
     </div>
