@@ -23,10 +23,7 @@ export type SolveResponse =
     };
 
 export async function solveHanoi(disks: number): Promise<SolveResponse> {
-  const base = process.env.NEXT_PUBLIC_HANOI_API_BASE;
-  if (!base) throw new Error('NEXT_PUBLIC_HANOI_API_BASE is not set');
-
-  const res = await fetch(`${base}/hanoi/solve`, {
+  const res = await fetch('/api/solve', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ disks }),
